@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.diet.app</groupId>
+    <artifactId>diet-app</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+     <properties>
+        <!-- Java -->
+        <java.version>25</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- Spring -->
+        <spring-boot.version>4.1.1</spring-boot.version>
+
+        <!-- Persistence -->
+        <hibernate.version>7.4.5.Final</hibernate.version>
+        <postgresql.version>42.7.13</postgresql.version>
+
+         <gson.version>2.14.0</gson.version>
+
+        <!-- Utilities -->
+        <lombok.version>1.18.46</lombok.version>
+
+        <!-- Build -->
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Spring Boot BOM -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+    <dependencies>
+
+        <!-- REST / Spring MVC -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Spring Data JPA + Hibernate -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
