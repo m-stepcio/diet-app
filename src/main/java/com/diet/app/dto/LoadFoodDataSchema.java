@@ -1,8 +1,10 @@
 package com.diet.app.dto;
 
+import lombok.Getter;
 import org.springframework.http.MediaType;
 
-public class LoadFoodDataSchemaV1 {
+@Getter
+public class LoadFoodDataSchema {
     private MediaType dataType;
     private long size;
     private String source;
