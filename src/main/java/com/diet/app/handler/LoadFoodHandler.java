@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class LoadFoodHandler {
 
     private final FoodService foodService;
-    private
+    private final PayloadResolver
 
     public void process(LoadFoodDataSchema loadFoodDataSchema){
 

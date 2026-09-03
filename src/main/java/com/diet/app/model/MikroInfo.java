@@ -1,4 +1,4 @@
-package com.diet.app.entity;
+package com.diet.app.model;
 
 public class MikroInfo {
     private long id;

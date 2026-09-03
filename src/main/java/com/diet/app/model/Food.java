@@ -1,4 +1,4 @@
-package com.diet.app.entity;
+package com.diet.app.model;
 
 import com.diet.app.enums.Category;
 import jakarta.persistence.Entity;
