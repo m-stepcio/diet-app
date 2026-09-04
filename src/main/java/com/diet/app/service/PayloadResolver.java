@@ -5,8 +5,9 @@ import com.diet.app.enums.Format;
 import com.diet.app.model.Payload;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Objects.isNull;
 
 @Service
 public class PayloadResolver {
@@ -21,7 +22,18 @@ public class PayloadResolver {
         );
     }
 
-    public Payload resolve(LoadFoodDataSchema loadFoodDataSchema){
-        return null;
+    public Payload resolve(LoadFoodDataSchema loadFoodDataSchema) throws Exception{
+        PayloadDecoder decoder = null;
+
+        for(Map.Entry<Format, PayloadDecoder> decoderEntry : payloadDecoderMap.entrySet()){
+            if(decoderEntry.getKey().isMediaTypeSupported(loadFoodDataSchema.getDataType())){
+                decoder = decoderEntry.getValue();
+            }
+        }
+
+        if(isNull(decoder)){
+            throw new IllegalArgumentException("No decoder found fr media type " + loadFoodDataSchema.getDataType());
+        }
+        return decoder.decode(loadFoodDataSchema.getPayload());
     }
 }

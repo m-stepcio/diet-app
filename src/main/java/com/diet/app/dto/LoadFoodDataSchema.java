@@ -9,6 +9,9 @@ public class LoadFoodDataSchema {
     private long size;
     private String source;
     private int schemaVersion;
-
     private String payload;
+
+    public SchemaMetadata getMetadata(){
+        return new SchemaMetadata(dataType, size, source, schemaVersion);
+    }
 }
