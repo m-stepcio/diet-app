@@ -9,6 +9,7 @@ import lombok.Setter;
 @Builder
 public class Nutrition{
     private String name;
+    private String producer;
     private MacroInfo macroInfo;
     private MicroInfo microInfo;
 }
