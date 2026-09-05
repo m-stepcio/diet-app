@@ -71,7 +71,7 @@ public class MappingResolverTest {
 
         Assertions.assertEquals(190.0, nutrition.getMicroInfo().getPhosphorus());
         Assertions.assertEquals(1.2, nutrition.getMicroInfo().getZinc());
-        Assertions.assertEquals(null, nutrition.getMicroInfo().getIron());
+        Assertions.assertNull(nutrition.getMicroInfo().getIron());
 
     }
 
