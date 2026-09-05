@@ -7,8 +7,14 @@
     <groupId>com.diet.app</groupId>
     <artifactId>diet-app</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>data-ingestor</module>
+        <module>nutrition</module>
+        <module>common-message</module>
+    </modules>
 
-     <properties>
+    <properties>
         <!-- Java -->
         <java.version>25</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -48,14 +54,6 @@
 
 
     <dependencies>
-
-        <!-- REST / Spring MVC -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

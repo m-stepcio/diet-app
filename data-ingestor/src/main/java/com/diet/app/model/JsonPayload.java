@@ -14,13 +14,10 @@ public class JsonPayload implements Payload{
 
     public JsonPayload(JsonArray input) {
         jsonArray = input;
-
-        if(jsonArray.isEmpty()){
-            keySet = Collections.emptySet();
-        } else {
-            keySet = jsonArray.get(0).getAsJsonObject().keySet();
-        }
+        keySet = readKeySet(input);
     }
+
+
 
     @Override
     public long getSize() {
@@ -33,8 +30,8 @@ public class JsonPayload implements Payload{
     }
 
     @Override
-    public Stream<JsonElement> stream() {
-        return Stream.of(jsonArray);
+    public Stream<PayloadObject> stream() {
+        return null;
     }
 
     @Override
@@ -45,5 +42,12 @@ public class JsonPayload implements Payload{
     @Override
     public PayloadObject getFirst() {
         return null;
+    }
+
+    private Set<String> readKeySet(JsonArray jsonArray){
+        if(jsonArray.isEmpty()){
+            return Collections.emptySet();
+        }
+        return jsonArray.get(0).getAsJsonObject().keySet();
     }
 }
