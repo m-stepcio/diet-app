@@ -1,5 +1,6 @@
-import com.diet.app.dto.MacroInfo;
 import com.diet.app.dto.Nutrition;
+import com.diet.app.exceptions.MissingRequiredFieldException;
+import com.diet.app.mapping.resolver.MappingResolver;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Assertions;
@@ -8,26 +9,38 @@ import org.junit.jupiter.api.Test;
 public class MappingResolverTest {
 
     @Test
-    void mappingFlatJsonToNutritionObject(){
+    void mappingFlatJsonToNutritionObjectTest(){
         JsonObject jsonObject = JsonParser.parseString("""
                 {
                 "name": "Chicken",
                 "kcal":130,
                 "protein": 15,
+                "carbohydrates": 30,
                 "fat":20
                 }
                 """).getAsJsonObject();
-        Nutrition nutrition = new Nutrition();
-        nutrition.setName(jsonObject.get("name").getAsString());
-        MacroInfo macroInfo = new MacroInfo();
-        macroInfo.setFat(jsonObject.get("fat").getAsDouble());
-        macroInfo.setKcal(jsonObject.get("kcal").getAsDouble());
-        macroInfo.setProtein(jsonObject.get("protein").getAsDouble());
+        MappingResolver mappingResolver = new MappingResolver();
+        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
 
-        nutrition.setMacroInfo(macroInfo);
-        Assertions.assertEquals(jsonObject.get("kcal").getAsDouble(), nutrition.getMacroInfo().getKcal());
-        Assertions.assertEquals(jsonObject.get("name").getAsString(), nutrition.getName());
-        Assertions.assertEquals(jsonObject.get("protein").getAsDouble(), nutrition.getMacroInfo().getProtein());
-        Assertions.assertEquals(jsonObject.get("fat").getAsDouble(), nutrition.getMacroInfo().getFat());
+        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
+        Assertions.assertEquals("Chicken", nutrition.getName());
+        Assertions.assertEquals(15, nutrition.getMacroInfo().getProtein());
+        Assertions.assertEquals(20, nutrition.getMacroInfo().getFat());
+    }
+
+    @Test
+    void mappingFlatJsonToNutritionObjectWithMissingRequiredFieldThrowExceptionTest(){
+        JsonObject jsonObject = JsonParser.parseString("""
+                {
+                "name": "Chicken",
+                "kcal":130,
+                "protein": 15,
+                "carbohydrates": 30
+                }
+                """).getAsJsonObject();
+        MappingResolver mappingResolver = new MappingResolver();
+        MissingRequiredFieldException exception = Assertions
+                .assertThrows(MissingRequiredFieldException.class, () -> mappingResolver.mapTo(jsonObject));
+        Assertions.assertTrue(exception.getMessage().contains("fat"));
     }
 }
