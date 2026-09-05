@@ -7,9 +7,21 @@ import com.diet.app.exceptions.MissingRequiredFieldException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+
+
 import static java.util.Objects.isNull;
 
 public class MappingResolver {
+
+    FieldName fieldNames;
+
+    public MappingResolver(){
+        this.fieldNames = new FieldName();
+    }
+
+    public  MappingResolver(FieldName fieldNames){
+        this.fieldNames = fieldNames;
+    }
 
     public Nutrition mapTo(JsonObject jsonObject) {
         return Nutrition.builder()
@@ -39,7 +51,7 @@ public class MappingResolver {
     }
 
     private JsonElement required(JsonObject jsonObject, String field) {
-        JsonElement value = jsonObject.get(field);
+        JsonElement value = jsonObject.get(fieldNames.getInputField(field));
         if (isNull(value) || value.isJsonNull()) {
             throw new MissingRequiredFieldException(field);
         }
@@ -47,7 +59,7 @@ public class MappingResolver {
     }
 
     private String optionalString(JsonObject jsonObject, String field) {
-        JsonElement value = jsonObject.get(field);
+        JsonElement value = jsonObject.get(fieldNames.getInputField(field));
         if (isNull(value) || value.isJsonNull()) {
             return null;
         }

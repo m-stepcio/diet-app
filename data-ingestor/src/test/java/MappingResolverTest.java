@@ -1,10 +1,13 @@
 import com.diet.app.dto.Nutrition;
 import com.diet.app.exceptions.MissingRequiredFieldException;
+import com.diet.app.mapping.resolver.FieldName;
 import com.diet.app.mapping.resolver.MappingResolver;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 public class MappingResolverTest {
 
@@ -73,6 +76,33 @@ public class MappingResolverTest {
         Assertions.assertEquals(1.2, nutrition.getMicroInfo().getZinc());
         Assertions.assertNull(nutrition.getMicroInfo().getIron());
 
+    }
+
+
+    @Test
+    void mappingFlatJsonWithDifferentFieldNames(){
+        JsonObject jsonObject = JsonParser.parseString("""
+            {
+                "food_name": "Chicken",
+                "energy": 130,
+                "proteins": 15,
+                "lipids": 20,
+                "carbs": 30
+        }""").getAsJsonObject();
+        FieldName fieldNames = new FieldName(
+                Map.entry( "name", "food_name"),
+                Map.entry( "kcal", "energy"),
+                Map.entry("protein", "proteins"),
+                Map.entry( "fat", "lipids"),
+                Map.entry("carbohydrates", "carbs")
+        );
+
+        MappingResolver mappingResolver = new MappingResolver(fieldNames);
+        Nutrition nutrition =  mappingResolver.mapTo(jsonObject);
+
+        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
+        Assertions.assertEquals(30, nutrition.getMacroInfo().getCarbohydrates());
+        Assertions.assertEquals("Chicken", nutrition.getName());
     }
 
     private JsonObject validNutritionJson() {
