@@ -1,7 +1,13 @@
 package com.diet.app.dto;
 
-public record MacroInfo(double kcal,
-                        double protein,
-                        double fat,
-                        double carbohydrates){
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class MacroInfo{
+    private double kcal;
+    private double protein;
+    private double fat;
+    private double carbohydrates;
 }
