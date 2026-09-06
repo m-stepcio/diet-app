@@ -24,7 +24,7 @@ public class MappingResolver {
     }
 
     public Nutrition mapTo(JsonObject jsonObject) {
-        return Nutrition.builder()
+        Nutrition nutrition = Nutrition.builder()
                 .name(required(jsonObject, "name").getAsString())
                 .producer(optionalString(jsonObject, "producer"))
                 .macroInfo(MacroInfo.builder()
@@ -47,6 +47,8 @@ public class MappingResolver {
                         .copper(optionalDouble(jsonObject, "copper"))
                         .manganese(optionalDouble(jsonObject, "manganese"))
                         .build()).build();
+        fieldNames.resetIndexes();
+        return nutrition;
 
     }
 

@@ -12,7 +12,7 @@ import java.util.Map;
 public class MappingResolverTest {
 
     @Test
-    void mappingFlatJsonToNutritionObjectTest(){
+    void mappingFlatJsonToNutritionObjectTest() {
         JsonObject jsonObject = validNutritionJson();
 
         MappingResolver mappingResolver = new MappingResolver();
@@ -25,7 +25,7 @@ public class MappingResolverTest {
     }
 
     @Test
-    void mappingFlatJsonToNutritionObjectWithMissingRequiredFieldThrowExceptionTest(){
+    void mappingFlatJsonToNutritionObjectWithMissingRequiredFieldThrowExceptionTest() {
         JsonObject jsonObject = validNutritionJson();
         jsonObject.remove("fat");
         MappingResolver mappingResolver = new MappingResolver();
@@ -35,7 +35,7 @@ public class MappingResolverTest {
     }
 
     @Test
-    void mappingFlatFileOptionalFieldMissingTest(){
+    void mappingFlatFileOptionalFieldMissingTest() {
         JsonObject jsonObject = validNutritionJson();
         jsonObject.remove("producer");
         MappingResolver mappingResolver = new MappingResolver();
@@ -50,7 +50,7 @@ public class MappingResolverTest {
 
 
     @Test
-    void mappingFlatFileOptionalFieldJsonNullTest(){
+    void mappingFlatFileOptionalFieldJsonNullTest() {
         JsonObject jsonObject = validNutritionJson();
         jsonObject.add("producer", null);
 
@@ -65,12 +65,12 @@ public class MappingResolverTest {
     }
 
     @Test
-    void mappingValidWithMicroFields(){
+    void mappingValidWithMicroFields() {
         JsonObject jsonObject = validNutritionWithMicro();
         jsonObject.remove("iron");
 
         MappingResolver mappingResolver = new MappingResolver();
-        Nutrition nutrition =  mappingResolver.mapTo(jsonObject);
+        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
 
         Assertions.assertEquals(190.0, nutrition.getMicroInfo().getPhosphorus());
         Assertions.assertEquals(1.2, nutrition.getMicroInfo().getZinc());
@@ -80,25 +80,25 @@ public class MappingResolverTest {
 
 
     @Test
-    void mappingFlatJsonWithDifferentFlatFieldNames(){
+    void mappingFlatJsonWithDifferentFlatFieldNames() {
         JsonObject jsonObject = JsonParser.parseString("""
-            {
-                "food_name": "Chicken",
-                "energy": 130,
-                "proteins": 15,
-                "lipids": 20,
-                "carbs": 30
-        }""").getAsJsonObject();
+                    {
+                        "food_name": "Chicken",
+                        "energy": 130,
+                        "proteins": 15,
+                        "lipids": 20,
+                        "carbs": 30
+                }""").getAsJsonObject();
         FieldName fieldNames = new FieldName(
-                Map.entry( "name", "food_name"),
-                Map.entry( "kcal", "energy"),
+                Map.entry("name", "food_name"),
+                Map.entry("kcal", "energy"),
                 Map.entry("protein", "proteins"),
-                Map.entry( "fat", "lipids"),
+                Map.entry("fat", "lipids"),
                 Map.entry("carbohydrates", "carbs")
         );
 
         MappingResolver mappingResolver = new MappingResolver(fieldNames);
-        Nutrition nutrition =  mappingResolver.mapTo(jsonObject);
+        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
 
         Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
         Assertions.assertEquals(30, nutrition.getMacroInfo().getCarbohydrates());
@@ -106,70 +106,125 @@ public class MappingResolverTest {
     }
 
     @Test
-    void mappingFlatJsonWithDifferentFieldNames(){
+    void mappingFlatJsonWithDifferentFieldNames() {
         JsonObject jsonObject = JsonParser.parseString("""
-            {
-                "details": {
-                    "food_name": "Chicken"
-                },
-                "food_info": {
-                    "energy": 130,
-                    "proteins": 15,
-                    "lipids": 20,
-                    "carbs": 30
-                }
-        }""").getAsJsonObject();
+                    {
+                        "details": {
+                            "food_name": "Chicken"
+                        },
+                        "food_info": {
+                            "energy": 130,
+                            "proteins": 15,
+                            "lipids": 20,
+                            "carbs": 30
+                        }
+                }""").getAsJsonObject();
         FieldName fieldNames = new FieldName(
-                Map.entry( "name", "details.food_name"),
-                Map.entry( "kcal", "food_info.energy"),
+                Map.entry("name", "details.food_name"),
+                Map.entry("kcal", "food_info.energy"),
                 Map.entry("protein", "food_info.proteins"),
-                Map.entry( "fat", "food_info.lipids"),
+                Map.entry("fat", "food_info.lipids"),
                 Map.entry("carbohydrates", "food_info.carbs")
         );
 
         MappingResolver mappingResolver = new MappingResolver(fieldNames);
-        Nutrition nutrition =  mappingResolver.mapTo(jsonObject);
+        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
 
         Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
         Assertions.assertEquals(30, nutrition.getMacroInfo().getCarbohydrates());
         Assertions.assertEquals("Chicken", nutrition.getName());
     }
 
-    private JsonObject validNutritionJson() {
-        return JsonParser.parseString("""
-            {
-              "name": "Chicken",
-              "kcal": 130,
-              "protein": 15,
-              "producer": "ABC",
-              "carbohydrates": 30,
-              "fat": 20
-            }
-            """).getAsJsonObject();
+    @Test
+    void reusesTheSameMappingForMultipleRecords() {
+        FieldName fieldNames = nestedFieldNames();
+        MappingResolver resolver =
+                new MappingResolver(fieldNames);
+
+        Nutrition chicken = resolver.mapTo(chickenJson());
+        Nutrition fish = resolver.mapTo(fishJson());
+
+        Assertions.assertEquals("Chicken", chicken.getName());
+        Assertions.assertEquals("Fish", fish.getName());
     }
 
-    private JsonObject validNutritionWithMicro(){
+    private JsonObject validNutritionJson() {
         return JsonParser.parseString("""
-                  {
-                      "name": "Chicken",
-                      "kcal": 130,
-                      "protein": 15,
-                      "producer": "ABC",
-                      "carbohydrates": 30,
-                      "fat": 20,
-                      "folat": 12.5,
-                      "calcium": 18.0,
-                      "iron": 1.4,
-                      "magnesium": 24.0,
-                      "potassium": 256.0,
-                      "sodium": 74.0,
-                      "zinc": 1.2,
-                      "selenium": 22.0,
-                      "iodine": 7.0,
-                      "phosphorus": 190.0,
-                      "copper": 0.08,
-                      "manganese": 0.03
-                    }
-            """).getAsJsonObject();
+                {
+                  "name": "Chicken",
+                  "kcal": 130,
+                  "protein": 15,
+                  "producer": "ABC",
+                  "carbohydrates": 30,
+                  "fat": 20
+                }
+                """).getAsJsonObject();
+    }
+
+    private JsonObject validNutritionWithMicro() {
+        return JsonParser.parseString("""
+                      {
+                          "name": "Chicken",
+                          "kcal": 130,
+                          "protein": 15,
+                          "producer": "ABC",
+                          "carbohydrates": 30,
+                          "fat": 20,
+                          "folat": 12.5,
+                          "calcium": 18.0,
+                          "iron": 1.4,
+                          "magnesium": 24.0,
+                          "potassium": 256.0,
+                          "sodium": 74.0,
+                          "zinc": 1.2,
+                          "selenium": 22.0,
+                          "iodine": 7.0,
+                          "phosphorus": 190.0,
+                          "copper": 0.08,
+                          "manganese": 0.03
+                        }
+                """).getAsJsonObject();
+    }
+
+    private FieldName nestedFieldNames() {
+        return new FieldName(
+                Map.entry("name", "details.food_name"),
+                Map.entry("kcal", "food_info.energy"),
+                Map.entry("protein", "food_info.proteins"),
+                Map.entry("fat", "food_info.lipids"),
+                Map.entry("carbohydrates", "food_info.carbs")
+        );
+    }
+
+    private JsonObject chickenJson() {
+        return JsonParser.parseString("""
+                {
+                  "details": {
+                    "food_name": "Chicken"
+                  },
+                  "food_info": {
+                    "energy": 130,
+                    "proteins": 15,
+                    "lipids": 20,
+                    "carbs": 30
+                  }
+                }
+                """).getAsJsonObject();
+    }
+
+    private JsonObject fishJson() {
+        return JsonParser.parseString("""
+                {
+                  "details": {
+                    "food_name": "Fish"
+                  },
+                  "food_info": {
+                    "energy": 90,
+                    "proteins": 22,
+                    "lipids": 4,
+                    "carbs": 2
+                  }
+                }
+                """).getAsJsonObject();
     }
 }

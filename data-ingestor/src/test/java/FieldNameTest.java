@@ -48,6 +48,18 @@ public class FieldNameTest {
         Assertions.assertEquals("something2", fieldName.getInputField("something"));
         Assertions.assertFalse(fieldName.hasNextPart("something"));
         Assertions.assertNull(fieldName.getInputField("something"));
+    }
 
+    @Test
+    void fieldNameMappingFlatResetIndex(){
+        FieldName fieldName = new FieldName(
+                Map.entry("file", "file_name"),
+                Map.entry("something", "something2")
+        );
+
+        Assertions.assertEquals("file_name", fieldName.getInputField("file"));
+        Assertions.assertNull(fieldName.getInputField("file"));
+        fieldName.resetIndexes();
+        Assertions.assertEquals("file_name", fieldName.getInputField("file"));
     }
 }

@@ -58,4 +58,8 @@ public class FieldName {
         indexes.put(outputField, indexes.get(outputField)+1);
         return value;
     }
+
+    public void resetIndexes(){
+        indexes.replaceAll((i, v) -> 0);
+    }
 }
