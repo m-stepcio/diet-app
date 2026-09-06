@@ -80,7 +80,7 @@ public class MappingResolverTest {
 
 
     @Test
-    void mappingFlatJsonWithDifferentFieldNames(){
+    void mappingFlatJsonWithDifferentFlatFieldNames(){
         JsonObject jsonObject = JsonParser.parseString("""
             {
                 "food_name": "Chicken",
@@ -95,6 +95,36 @@ public class MappingResolverTest {
                 Map.entry("protein", "proteins"),
                 Map.entry( "fat", "lipids"),
                 Map.entry("carbohydrates", "carbs")
+        );
+
+        MappingResolver mappingResolver = new MappingResolver(fieldNames);
+        Nutrition nutrition =  mappingResolver.mapTo(jsonObject);
+
+        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
+        Assertions.assertEquals(30, nutrition.getMacroInfo().getCarbohydrates());
+        Assertions.assertEquals("Chicken", nutrition.getName());
+    }
+
+    @Test
+    void mappingFlatJsonWithDifferentFieldNames(){
+        JsonObject jsonObject = JsonParser.parseString("""
+            {
+                "details": {
+                    "food_name": "Chicken"
+                },
+                "food_info": {
+                    "energy": 130,
+                    "proteins": 15,
+                    "lipids": 20,
+                    "carbs": 30
+                }
+        }""").getAsJsonObject();
+        FieldName fieldNames = new FieldName(
+                Map.entry( "name", "details.food_name"),
+                Map.entry( "kcal", "food_info.energy"),
+                Map.entry("protein", "food_info.proteins"),
+                Map.entry( "fat", "food_info.lipids"),
+                Map.entry("carbohydrates", "food_info.carbs")
         );
 
         MappingResolver mappingResolver = new MappingResolver(fieldNames);

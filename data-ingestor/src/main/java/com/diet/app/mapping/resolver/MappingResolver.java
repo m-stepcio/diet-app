@@ -51,7 +51,7 @@ public class MappingResolver {
     }
 
     private JsonElement required(JsonObject jsonObject, String field) {
-        JsonElement value = jsonObject.get(fieldNames.getInputField(field));
+        JsonElement value = getAsJsonELement(field, jsonObject);
         if (isNull(value) || value.isJsonNull()) {
             throw new MissingRequiredFieldException(field);
         }
@@ -59,7 +59,7 @@ public class MappingResolver {
     }
 
     private String optionalString(JsonObject jsonObject, String field) {
-        JsonElement value = jsonObject.get(fieldNames.getInputField(field));
+        JsonElement value = getAsJsonELement(field, jsonObject);
         if (isNull(value) || value.isJsonNull()) {
             return null;
         }
@@ -67,10 +67,18 @@ public class MappingResolver {
     }
 
     private Double optionalDouble(JsonObject jsonObject, String field) {
-        JsonElement value = jsonObject.get(field);
+        JsonElement value = getAsJsonELement(field, jsonObject);
         if (isNull(value) || value.isJsonNull()) {
             return null;
         }
         return value.getAsDouble();
+    }
+
+    private JsonElement getAsJsonELement(String field, JsonObject jsonObject){
+        JsonElement jsonElement = jsonObject.get(fieldNames.getInputField(field));
+        while(fieldNames.hasNextPart(field)){
+            jsonElement = jsonElement.getAsJsonObject().get(fieldNames.getInputField(field));
+        }
+        return jsonElement;
     }
 }
