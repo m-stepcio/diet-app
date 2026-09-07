@@ -1,6 +1,6 @@
 import com.diet.app.dto.Nutrition;
 import com.diet.app.exceptions.MissingRequiredFieldException;
-import com.diet.app.mapping.resolver.FieldName;
+import com.diet.app.mapping.resolver.SourcePath;
 import com.diet.app.mapping.resolver.MappingResolver;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -89,7 +89,7 @@ public class MappingResolverTest {
                         "lipids": 20,
                         "carbs": 30
                 }""").getAsJsonObject();
-        FieldName fieldNames = new FieldName(
+        SourcePath fieldNames = new SourcePath(
                 Map.entry("name", "food_name"),
                 Map.entry("kcal", "energy"),
                 Map.entry("protein", "proteins"),
@@ -119,7 +119,7 @@ public class MappingResolverTest {
                             "carbs": 30
                         }
                 }""").getAsJsonObject();
-        FieldName fieldNames = new FieldName(
+        SourcePath fieldNames = new SourcePath(
                 Map.entry("name", "details.food_name"),
                 Map.entry("kcal", "food_info.energy"),
                 Map.entry("protein", "food_info.proteins"),
@@ -137,7 +137,7 @@ public class MappingResolverTest {
 
     @Test
     void reusesTheSameMappingForMultipleRecords() {
-        FieldName fieldNames = nestedFieldNames();
+        SourcePath fieldNames = nestedFieldNames();
         MappingResolver resolver =
                 new MappingResolver(fieldNames);
 
@@ -186,8 +186,8 @@ public class MappingResolverTest {
                 """).getAsJsonObject();
     }
 
-    private FieldName nestedFieldNames() {
-        return new FieldName(
+    private SourcePath nestedFieldNames() {
+        return new SourcePath(
                 Map.entry("name", "details.food_name"),
                 Map.entry("kcal", "food_info.energy"),
                 Map.entry("protein", "food_info.proteins"),

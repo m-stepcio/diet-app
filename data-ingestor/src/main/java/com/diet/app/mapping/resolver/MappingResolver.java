@@ -13,14 +13,14 @@ import static java.util.Objects.isNull;
 
 public class MappingResolver {
 
-    FieldName fieldNames;
+    SourcePath sourcePath;
 
     public MappingResolver(){
-        this.fieldNames = new FieldName();
+        this.sourcePath = new SourcePath();
     }
 
-    public  MappingResolver(FieldName fieldNames){
-        this.fieldNames = fieldNames;
+    public  MappingResolver(SourcePath fieldNames){
+        this.sourcePath = fieldNames;
     }
 
     public Nutrition mapTo(JsonObject jsonObject) {
@@ -47,7 +47,6 @@ public class MappingResolver {
                         .copper(optionalDouble(jsonObject, "copper"))
                         .manganese(optionalDouble(jsonObject, "manganese"))
                         .build()).build();
-        fieldNames.resetIndexes();
         return nutrition;
 
     }
@@ -77,10 +76,21 @@ public class MappingResolver {
     }
 
     private JsonElement getAsJsonELement(String field, JsonObject jsonObject){
-        JsonElement jsonElement = jsonObject.get(fieldNames.getInputField(field));
-        while(fieldNames.hasNextPart(field)){
-            jsonElement = jsonElement.getAsJsonObject().get(fieldNames.getInputField(field));
+        if(sourcePath.isMappingUsed()) {
+            if(!sourcePath.hasMapping(field)){
+                return null;
+            }
+            String[] path = sourcePath.getInputPath(field);
+            int idx = 0;
+            JsonElement jsonElement = jsonObject.get(path[idx++]);
+
+            while (idx < path.length) {
+                jsonElement = jsonElement.getAsJsonObject().get(path[idx]);
+                idx++;
+            }
+            return jsonElement;
         }
-        return jsonElement;
+
+        return jsonObject.get(field);
     }
 }
