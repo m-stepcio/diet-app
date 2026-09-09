@@ -1,4 +1,4 @@
-import com.diet.app.dto.Nutrition;
+import com.diet.app.dto.NutritionDto;
 import com.diet.app.exceptions.MissingRequiredFieldException;
 import com.diet.app.mapping.resolver.SourcePath;
 import com.diet.app.mapping.resolver.MappingResolver;
@@ -16,12 +16,12 @@ public class MappingResolverTest {
         JsonObject jsonObject = validNutritionJson();
 
         MappingResolver mappingResolver = new MappingResolver();
-        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
+        NutritionDto nutritionDto = mappingResolver.mapTo(jsonObject);
 
-        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
-        Assertions.assertEquals("Chicken", nutrition.getName());
-        Assertions.assertEquals(15, nutrition.getMacroInfo().getProtein());
-        Assertions.assertEquals(20, nutrition.getMacroInfo().getFat());
+        Assertions.assertEquals(130, nutritionDto.getMacroInfo().getKcal());
+        Assertions.assertEquals("Chicken", nutritionDto.getName());
+        Assertions.assertEquals(15, nutritionDto.getMacroInfo().getProtein());
+        Assertions.assertEquals(20, nutritionDto.getMacroInfo().getFat());
     }
 
     @Test
@@ -39,13 +39,13 @@ public class MappingResolverTest {
         JsonObject jsonObject = validNutritionJson();
         jsonObject.remove("producer");
         MappingResolver mappingResolver = new MappingResolver();
-        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
+        NutritionDto nutritionDto = mappingResolver.mapTo(jsonObject);
 
-        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
-        Assertions.assertEquals("Chicken", nutrition.getName());
-        Assertions.assertEquals(15, nutrition.getMacroInfo().getProtein());
-        Assertions.assertEquals(20, nutrition.getMacroInfo().getFat());
-        Assertions.assertNull(nutrition.getProducer());
+        Assertions.assertEquals(130, nutritionDto.getMacroInfo().getKcal());
+        Assertions.assertEquals("Chicken", nutritionDto.getName());
+        Assertions.assertEquals(15, nutritionDto.getMacroInfo().getProtein());
+        Assertions.assertEquals(20, nutritionDto.getMacroInfo().getFat());
+        Assertions.assertNull(nutritionDto.getProducer());
     }
 
 
@@ -55,13 +55,13 @@ public class MappingResolverTest {
         jsonObject.add("producer", null);
 
         MappingResolver mappingResolver = new MappingResolver();
-        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
+        NutritionDto nutritionDto = mappingResolver.mapTo(jsonObject);
 
-        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
-        Assertions.assertEquals("Chicken", nutrition.getName());
-        Assertions.assertEquals(15, nutrition.getMacroInfo().getProtein());
-        Assertions.assertEquals(20, nutrition.getMacroInfo().getFat());
-        Assertions.assertNull(nutrition.getProducer());
+        Assertions.assertEquals(130, nutritionDto.getMacroInfo().getKcal());
+        Assertions.assertEquals("Chicken", nutritionDto.getName());
+        Assertions.assertEquals(15, nutritionDto.getMacroInfo().getProtein());
+        Assertions.assertEquals(20, nutritionDto.getMacroInfo().getFat());
+        Assertions.assertNull(nutritionDto.getProducer());
     }
 
     @Test
@@ -70,11 +70,11 @@ public class MappingResolverTest {
         jsonObject.remove("iron");
 
         MappingResolver mappingResolver = new MappingResolver();
-        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
+        NutritionDto nutritionDto = mappingResolver.mapTo(jsonObject);
 
-        Assertions.assertEquals(190.0, nutrition.getMicroInfo().getPhosphorus());
-        Assertions.assertEquals(1.2, nutrition.getMicroInfo().getZinc());
-        Assertions.assertNull(nutrition.getMicroInfo().getIron());
+        Assertions.assertEquals(190.0, nutritionDto.getMicroInfo().getPhosphorus());
+        Assertions.assertEquals(1.2, nutritionDto.getMicroInfo().getZinc());
+        Assertions.assertNull(nutritionDto.getMicroInfo().getIron());
 
     }
 
@@ -98,11 +98,11 @@ public class MappingResolverTest {
         );
 
         MappingResolver mappingResolver = new MappingResolver(fieldNames);
-        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
+        NutritionDto nutritionDto = mappingResolver.mapTo(jsonObject);
 
-        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
-        Assertions.assertEquals(30, nutrition.getMacroInfo().getCarbohydrates());
-        Assertions.assertEquals("Chicken", nutrition.getName());
+        Assertions.assertEquals(130, nutritionDto.getMacroInfo().getKcal());
+        Assertions.assertEquals(30, nutritionDto.getMacroInfo().getCarbohydrates());
+        Assertions.assertEquals("Chicken", nutritionDto.getName());
     }
 
     @Test
@@ -128,11 +128,11 @@ public class MappingResolverTest {
         );
 
         MappingResolver mappingResolver = new MappingResolver(fieldNames);
-        Nutrition nutrition = mappingResolver.mapTo(jsonObject);
+        NutritionDto nutritionDto = mappingResolver.mapTo(jsonObject);
 
-        Assertions.assertEquals(130, nutrition.getMacroInfo().getKcal());
-        Assertions.assertEquals(30, nutrition.getMacroInfo().getCarbohydrates());
-        Assertions.assertEquals("Chicken", nutrition.getName());
+        Assertions.assertEquals(130, nutritionDto.getMacroInfo().getKcal());
+        Assertions.assertEquals(30, nutritionDto.getMacroInfo().getCarbohydrates());
+        Assertions.assertEquals("Chicken", nutritionDto.getName());
     }
 
     @Test
@@ -141,8 +141,8 @@ public class MappingResolverTest {
         MappingResolver resolver =
                 new MappingResolver(fieldNames);
 
-        Nutrition chicken = resolver.mapTo(chickenJson());
-        Nutrition fish = resolver.mapTo(fishJson());
+        NutritionDto chicken = resolver.mapTo(chickenJson());
+        NutritionDto fish = resolver.mapTo(fishJson());
 
         Assertions.assertEquals("Chicken", chicken.getName());
         Assertions.assertEquals("Fish", fish.getName());

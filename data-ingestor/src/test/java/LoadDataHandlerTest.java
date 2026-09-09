@@ -1,6 +1,6 @@
 import com.diet.app.components.KafkaPublisher;
 import com.diet.app.dto.LoadFoodDataSchema;
-import com.diet.app.dto.Nutrition;
+import com.diet.app.dto.NutritionDto;
 import com.diet.app.service.LoadNutritionHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -48,14 +48,14 @@ public class LoadDataHandlerTest {
                 ]
                 """);
 
-        ArgumentCaptor<Nutrition> argumentCaptor = ArgumentCaptor.forClass(Nutrition.class);
+        ArgumentCaptor<NutritionDto> argumentCaptor = ArgumentCaptor.forClass(NutritionDto.class);
         LoadNutritionHandler loadNutritionHandler = new LoadNutritionHandler(kafkaPublisher);
         loadNutritionHandler.process(loadFoodDataSchema);
         verify(kafkaPublisher).publish(argumentCaptor.capture());
-        List<Nutrition> nutritions = argumentCaptor.getAllValues();
-        Assertions.assertEquals(1, nutritions.size());
-        Assertions.assertEquals(0.03, nutritions.get(0).getMicroInfo().getManganese());
-        Assertions.assertEquals("Chicken", nutritions.get(0).getName());
+        List<NutritionDto> nutritionDtos = argumentCaptor.getAllValues();
+        Assertions.assertEquals(1, nutritionDtos.size());
+        Assertions.assertEquals(0.03, nutritionDtos.get(0).getMicroInfo().getManganese());
+        Assertions.assertEquals("Chicken", nutritionDtos.get(0).getName());
     }
 
     @Test
@@ -93,15 +93,15 @@ public class LoadDataHandlerTest {
                 ]
                 """);
 
-        ArgumentCaptor<Nutrition> argumentCaptor = ArgumentCaptor.forClass(Nutrition.class);
+        ArgumentCaptor<NutritionDto> argumentCaptor = ArgumentCaptor.forClass(NutritionDto.class);
         LoadNutritionHandler loadNutritionHandler = new LoadNutritionHandler(kafkaPublisher);
         loadNutritionHandler.process(loadFoodDataSchema);
         verify(kafkaPublisher, times(2)).publish(argumentCaptor.capture());
-        List<Nutrition> nutritions = argumentCaptor.getAllValues();
-        Assertions.assertEquals(2, nutritions.size());
-        Assertions.assertEquals(0.03, nutritions.get(0).getMicroInfo().getManganese());
-        Assertions.assertEquals("Chicken", nutritions.get(0).getName());
-        Assertions.assertEquals("Fish", nutritions.get(1).getName());
+        List<NutritionDto> nutritionDtos = argumentCaptor.getAllValues();
+        Assertions.assertEquals(2, nutritionDtos.size());
+        Assertions.assertEquals(0.03, nutritionDtos.get(0).getMicroInfo().getManganese());
+        Assertions.assertEquals("Chicken", nutritionDtos.get(0).getName());
+        Assertions.assertEquals("Fish", nutritionDtos.get(1).getName());
 
     }
 

@@ -2,7 +2,7 @@ package com.diet.app.service;
 
 import com.diet.app.components.KafkaPublisher;
 import com.diet.app.dto.LoadFoodDataSchema;
-import com.diet.app.dto.Nutrition;
+import com.diet.app.dto.NutritionDto;
 import com.diet.app.mapping.resolver.MappingResolver;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -34,8 +34,8 @@ public class LoadNutritionHandler {
         Iterator<JsonElement> iterator = jsonArray.iterator();
         MappingResolver mappingResolver = new MappingResolver();
         while (iterator.hasNext()) {
-            Nutrition nutrition = mappingResolver.mapTo(iterator.next().getAsJsonObject());
-            kafkaPublisher.publish(nutrition);
+            NutritionDto nutritionDto = mappingResolver.mapTo(iterator.next().getAsJsonObject());
+            kafkaPublisher.publish(nutritionDto);
         }
     }
 }
