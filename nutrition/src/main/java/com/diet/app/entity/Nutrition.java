@@ -3,12 +3,9 @@ package com.diet.app.entity;
 import com.diet.app.dto.MacroInfo;
 import com.diet.app.dto.MicroInfo;
 import com.diet.app.enums.Unit;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 @Entity
 @Setter
@@ -21,8 +18,10 @@ public class Nutrition {
     private String producer;
     private Unit unit;
     private Double size;
-    private MacroInfo macroInfo;
-    private MicroInfo microInfo;
+    @Embedded
+    private MacroInfoEmbeddable macroInfo;
+    @Embedded
+    private MicroInfoEmbeddable microInfo;
 
 
 }

@@ -33,3 +33,12 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: diet
+      POSTGRES_USER: diet
+      POSTGRES_PASSWORD: diet
+    ports:
+      - "5432:5432"
