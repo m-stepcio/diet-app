@@ -1,13 +1,13 @@
 package com.diet.app.dto;
 
 import com.diet.app.enums.Unit;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class NutritionDto {
     private String name;
     private String producer;
