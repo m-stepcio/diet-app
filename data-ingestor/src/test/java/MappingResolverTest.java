@@ -85,6 +85,8 @@ public class MappingResolverTest {
                     {
                         "food_name": "Chicken",
                         "energy": 130,
+                        "units":"gram",
+                        "quantity":12,
                         "proteins": 15,
                         "lipids": 20,
                         "carbs": 30
@@ -92,6 +94,9 @@ public class MappingResolverTest {
         SourcePath fieldNames = new SourcePath(
                 Map.entry("name", "food_name"),
                 Map.entry("kcal", "energy"),
+                Map.entry("kcal", "energy"),
+                Map.entry("unit", "units"),
+                Map.entry("size", "quantity"),
                 Map.entry("protein", "proteins"),
                 Map.entry("fat", "lipids"),
                 Map.entry("carbohydrates", "carbs")
@@ -110,7 +115,9 @@ public class MappingResolverTest {
         JsonObject jsonObject = JsonParser.parseString("""
                     {
                         "details": {
-                            "food_name": "Chicken"
+                            "food_name": "Chicken",
+                            "unit":"gram",
+                            "size":130
                         },
                         "food_info": {
                             "energy": 130,
@@ -122,6 +129,8 @@ public class MappingResolverTest {
         SourcePath fieldNames = new SourcePath(
                 Map.entry("name", "details.food_name"),
                 Map.entry("kcal", "food_info.energy"),
+                Map.entry("unit", "details.unit"),
+                Map.entry("size", "details.size"),
                 Map.entry("protein", "food_info.proteins"),
                 Map.entry("fat", "food_info.lipids"),
                 Map.entry("carbohydrates", "food_info.carbs")
@@ -154,6 +163,8 @@ public class MappingResolverTest {
                   "name": "Chicken",
                   "kcal": 130,
                   "protein": 15,
+                  "size": 100,
+                  "unit": "gram",
                   "producer": "ABC",
                   "carbohydrates": 30,
                   "fat": 20
@@ -166,6 +177,8 @@ public class MappingResolverTest {
                       {
                           "name": "Chicken",
                           "kcal": 130,
+                          "size": 100,
+                          "unit": "gram",
                           "protein": 15,
                           "producer": "ABC",
                           "carbohydrates": 30,
@@ -190,6 +203,8 @@ public class MappingResolverTest {
         return new SourcePath(
                 Map.entry("name", "details.food_name"),
                 Map.entry("kcal", "food_info.energy"),
+                Map.entry("unit", "details.unit"),
+                Map.entry("size", "details.size"),
                 Map.entry("protein", "food_info.proteins"),
                 Map.entry("fat", "food_info.lipids"),
                 Map.entry("carbohydrates", "food_info.carbs")
@@ -200,7 +215,9 @@ public class MappingResolverTest {
         return JsonParser.parseString("""
                 {
                   "details": {
-                    "food_name": "Chicken"
+                    "food_name": "Chicken",
+                    "size": 100,
+                    "unit": "gram"
                   },
                   "food_info": {
                     "energy": 130,
@@ -216,7 +233,9 @@ public class MappingResolverTest {
         return JsonParser.parseString("""
                 {
                   "details": {
-                    "food_name": "Fish"
+                    "food_name": "Fish",
+                    "unit": "gram",
+                    "size": 130
                   },
                   "food_info": {
                     "energy": 90,

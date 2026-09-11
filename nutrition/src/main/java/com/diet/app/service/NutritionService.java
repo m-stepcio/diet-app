@@ -4,7 +4,7 @@ import com.diet.app.dto.MacroInfo;
 import com.diet.app.dto.NutritionDto;
 import com.diet.app.entity.MacroInfoEmbeddable;
 import com.diet.app.entity.Nutrition;
-import com.diet.app.exception.NotFoundException;
+import com.diet.app.exceptions.NotFoundException;
 import com.diet.app.exceptions.MissingRequiredFieldException;
 import com.diet.app.models.NutritionBasicInfo;
 import com.diet.app.repository.NutritionRepository;

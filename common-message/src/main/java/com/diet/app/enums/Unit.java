@@ -1,6 +1,9 @@
 package com.diet.app.enums;
 
+import com.diet.app.exceptions.NotFoundException;
 import lombok.Getter;
+
+import java.util.Arrays;
 
 @Getter
 public enum Unit {
@@ -15,6 +18,16 @@ public enum Unit {
         this.targetSize = targetSize;
     }
 
-    private String name;
-    private double targetSize;
+    private final String name;
+    private final double targetSize;
+
+    public static Unit fromValue(String value){
+        String cleanedValue = value.toLowerCase().trim();
+        return Arrays.stream(Unit.values())
+                .filter(unit -> unit.name.equals(cleanedValue))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(
+                        "Could not find unit with name " + value
+                ));
+    }
 }

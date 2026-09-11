@@ -3,6 +3,7 @@ package com.diet.app.mapping.resolver;
 import com.diet.app.dto.MacroInfo;
 import com.diet.app.dto.MicroInfo;
 import com.diet.app.dto.NutritionDto;
+import com.diet.app.enums.Unit;
 import com.diet.app.exceptions.MissingRequiredFieldException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,6 +27,8 @@ public class MappingResolver {
     public NutritionDto mapTo(JsonObject jsonObject) {
         NutritionDto nutritionDto = NutritionDto.builder()
                 .name(required(jsonObject, "name").getAsString())
+                .unit(Unit.fromValue(required(jsonObject, "unit").getAsString()))
+                .size(required(jsonObject, "size").getAsDouble())
                 .producer(optionalString(jsonObject, "producer"))
                 .macroInfo(MacroInfo.builder()
                         .fat(required(jsonObject, "fat").getAsDouble())
