@@ -1,15 +1,20 @@
 package com.diet.app.enums;
 
-public enum Unit {
-    G("gram"),
-    KG("kilogram"),
-    ML("mililiters"),
-    L("liters"),
-    GAL("galon");
+import lombok.Getter;
 
-    Unit(String name) {
+@Getter
+public enum Unit {
+    G("gram", 100),
+    KG("kilogram", 1),
+    ML("mililiters", 100),
+    L("liters", 1),
+    GAL("galon", 1);
+
+    Unit(String name, double targetSize) {
         this.name = name;
+        this.targetSize = targetSize;
     }
 
     private String name;
+    private double targetSize;
 }
