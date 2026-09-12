@@ -37,12 +37,14 @@ public class NutritionService {
         Nutrition nutrition = new Nutrition();
         nutrition.setName(nutritionDto.getName());
         nutrition.setProducer(nutrition.getProducer());
-        if(isNull(nutrition.getSize())){
+        if(isNull(nutritionDto.getSize())){
             throw new MissingRequiredFieldException("Size cannot be empty");
         }
-        if(isNull(nutrition.getUnit())){
+        if(isNull(nutritionDto.getUnit())){
             throw new MissingRequiredFieldException("Unit cannot be null");
         }
+        nutrition.setUnit(nutritionDto.getUnit());
+        nutrition.setSize(nutrition.getUnit().getTargetSize());
         double multiplicator = calculateMultiplayer(nutrition.getSize(), nutrition.getUnit().getTargetSize());
 
         nutrition.setMacroInfo(mapMacro(nutritionDto.getMacroInfo(), multiplicator));

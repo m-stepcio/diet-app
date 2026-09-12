@@ -26,7 +26,6 @@ public class DataIngestionController {
             loadNutritionHandler.process(loadFoodDataSchema);
         } catch (Exception e){
             log.error(e.getMessage());
-            log.error("{}", e.getCause().toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok().build();

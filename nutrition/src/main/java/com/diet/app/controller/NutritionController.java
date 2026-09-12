@@ -4,6 +4,7 @@ import com.diet.app.models.NutritionBasicInfo;
 import com.diet.app.service.NutritionService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ public class NutritionController {
     }
 
     @GetMapping("/{id}")
-    public NutritionBasicInfo getProductNutrition(@PathParam("id") int id){
+    public NutritionBasicInfo getProductNutrition(@PathVariable("id") int id){
         return nutritionService.getProductBeId(id);
     }
 }
