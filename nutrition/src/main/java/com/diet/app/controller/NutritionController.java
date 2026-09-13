@@ -18,7 +18,10 @@ public class NutritionController {
     }
 
     @GetMapping("/{id}")
-    public NutritionBasicInfo getProductNutrition(@PathVariable("id") int id){
-        return nutritionService.getProductBeId(id);
+    public NutritionBasicInfo getProductNutrition(@PathVariable("id") int id,
+                                                  @PathParam("size") double size,
+                                                  @PathParam("unit") String unit){
+        return nutritionService.getProduct(id, size, unit);
     }
+
 }

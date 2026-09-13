@@ -24,13 +24,17 @@ public class NutritionService {
         nutritionRepository.save(parseToNutrition(nutritionDto));
     }
 
-    public NutritionBasicInfo getProductBeId(int id){
+    public NutritionBasicInfo getProduct(int id, double size, String unit){
         Nutrition nutrition = nutritionRepository
                 .findById(Integer.valueOf(id)).orElseThrow(
                         ()->{throw new NotFoundException(id);}
         );
 
-        return NutritionBasicInfo.fromNutrition(nutrition);
+        double multiplicator = calculateMultiplayer(nutrition.getSize(), size);
+        NutritionBasicInfo.NutritionBasicInfoBuilder nutritionBasicInfoBuilder = NutritionBasicInfo.builder();
+        nutritionBasicInfoBuilder = mapProductInfo(nutritionBasicInfoBuilder, nutrition);
+        nutritionBasicInfoBuilder = prepareMacroInfo(nutritionBasicInfoBuilder, nutrition, multiplicator);
+        return nutritionBasicInfoBuilder.build();
     }
 
     public Nutrition parseToNutrition(NutritionDto nutritionDto){
@@ -69,5 +73,24 @@ public class NutritionService {
         return macroInfoEmbeddable;
     }
 
+    private NutritionBasicInfo.NutritionBasicInfoBuilder mapProductInfo(
+            NutritionBasicInfo.NutritionBasicInfoBuilder builder,
+            Nutrition nutrition
+    ){
+        return builder
+                .id(nutrition.getId())
+                .name(nutrition.getName())
+                .producent(nutrition.getProducer());
+    }
 
+    private NutritionBasicInfo.NutritionBasicInfoBuilder prepareMacroInfo(
+                NutritionBasicInfo.NutritionBasicInfoBuilder builder,
+                Nutrition nutrition, double multiplicator
+    ){
+        return builder
+                .protein(nutrition.getMacroInfo().getProtein() * multiplicator)
+                .carbs(nutrition.getMacroInfo().getCarbohydrates() * multiplicator)
+                .fat(nutrition.getMacroInfo().getFat() * multiplicator)
+                .kcal(nutrition.getMacroInfo().getKcal() * multiplicator);
+    }
 }

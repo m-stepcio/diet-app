@@ -1,6 +1,6 @@
 package com.diet.app.models;
 
-import com.diet.app.entity.Nutrition;
+import com.diet.app.enums.Unit;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,17 +16,6 @@ public class NutritionBasicInfo {
     private Double protein;
     private Double fat;
     private Double carbs;
-
-    public static NutritionBasicInfo fromNutrition(Nutrition nutrition){
-        return NutritionBasicInfo
-                .builder()
-                .id(nutrition.getId())
-                .name(nutrition.getName())
-                .producent(nutrition.getProducer())
-                .protein(nutrition.getMacroInfo().getProtein())
-                .carbs(nutrition.getMacroInfo().getCarbohydrates())
-                .fat(nutrition.getMacroInfo().getFat())
-                .kcal(nutrition.getMacroInfo().getKcal())
-                .build();
-    }
+    private Double size;
+    private Unit unit;
 }
