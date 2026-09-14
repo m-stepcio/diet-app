@@ -4,6 +4,8 @@ import com.diet.app.dto.MacroInfo;
 import com.diet.app.dto.NutritionDto;
 import com.diet.app.entity.MacroInfoEmbeddable;
 import com.diet.app.entity.Nutrition;
+import com.diet.app.enums.Unit;
+import com.diet.app.exceptions.BadUnitException;
 import com.diet.app.exceptions.NotFoundException;
 import com.diet.app.exceptions.MissingRequiredFieldException;
 import com.diet.app.models.NutritionBasicInfo;
@@ -26,11 +28,15 @@ public class NutritionService {
 
     public NutritionBasicInfo getProduct(int id, double size, String unit){
         Nutrition nutrition = nutritionRepository
-                .findById(Integer.valueOf(id)).orElseThrow(
-                        ()->{throw new NotFoundException(id);}
+                .findById(id).orElseThrow(
+                        ()-> new NotFoundException(id)
         );
-
-        double multiplicator = calculateMultiplayer(nutrition.getSize(), size);
+        Unit requestedUnit = Unit.fromValue(unit);
+        if(!requestedUnit.getBaseUnit().equals(nutrition.getUnit())){
+            throw new BadUnitException(nutrition.getUnit().getSymbol(), requestedUnit.getSymbol());
+        }
+        double outputUnitMultiplayer = 1 / requestedUnit.getToBaseMultiplayer();
+        double multiplicator = calculateMultiplayer(nutrition.getSize(), size, outputUnitMultiplayer);
         NutritionBasicInfo.NutritionBasicInfoBuilder nutritionBasicInfoBuilder = NutritionBasicInfo.builder();
         nutritionBasicInfoBuilder = mapProductInfo(nutritionBasicInfoBuilder, nutrition);
         nutritionBasicInfoBuilder = prepareMacroInfo(nutritionBasicInfoBuilder, nutrition, multiplicator);
@@ -47,17 +53,20 @@ public class NutritionService {
         if(isNull(nutritionDto.getUnit())){
             throw new MissingRequiredFieldException("Unit cannot be null");
         }
-        nutrition.setUnit(nutritionDto.getUnit());
-        nutrition.setSize(nutrition.getUnit().getTargetSize());
-        double multiplicator = calculateMultiplayer(nutrition.getSize(), nutrition.getUnit().getTargetSize());
+        nutrition.setUnit(nutritionDto.getUnit().getBaseUnit());
+
+        nutrition.setSize(nutrition.getUnit().getBaseRepresentationAmount());
+        double multiplicator = calculateMultiplayer(nutrition.getSize(),
+                nutrition.getUnit().getBaseRepresentationAmount(),
+                nutritionDto.getUnit().getToBaseMultiplayer());
 
         nutrition.setMacroInfo(mapMacro(nutritionDto.getMacroInfo(), multiplicator));
 
         return nutrition;
     }
 
-    private double calculateMultiplayer(double inputSize, double targetSize){
-        return inputSize/targetSize;
+    private double calculateMultiplayer(double inputSize, double outputSize, double unitMultiplayer){
+        return inputSize*unitMultiplayer/outputSize;
     }
 
     private double recalculateField(double inputValue, double multiplicator){

@@ -1,7 +1,5 @@
 package com.diet.app.entity;
 
-import com.diet.app.dto.MacroInfo;
-import com.diet.app.dto.MicroInfo;
 import com.diet.app.enums.Unit;
 import jakarta.persistence.*;
 import lombok.Getter;
