@@ -4,12 +4,15 @@ import com.diet.app.dto.MacroInfo;
 import com.diet.app.dto.NutritionDto;
 import com.diet.app.entity.MacroInfoEmbeddable;
 import com.diet.app.entity.Nutrition;
+import com.diet.app.enums.QueryOperator;
 import com.diet.app.enums.Unit;
 import com.diet.app.exceptions.BadUnitException;
 import com.diet.app.exceptions.NotFoundException;
 import com.diet.app.exceptions.MissingRequiredFieldException;
 import com.diet.app.models.NutritionBasicInfo;
 import com.diet.app.repository.NutritionRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import static java.util.Objects.isNull;
@@ -26,7 +29,19 @@ public class NutritionService {
         nutritionRepository.save(parseToNutrition(nutritionDto));
     }
 
-    public NutritionBasicInfo getProduct(int id, double size, String unit){
+    public Page<NutritionBasicInfo> getProducts(String name, QueryOperator kcalOp, Double kcal,
+                                                QueryOperator proteinOp, Double protein,
+                                                QueryOperator fatOp, Double fat,
+                                                QueryOperator carbohydratesOp, Double carbohydrates,
+                                                int page, int size){
+        Specification<Nutrition> specification =
+                NutritionSpecifications.matches(
+                        name, kcal, protein, fat, carbohydrates
+                );
+        nutritionRepository.findAll()
+    }
+
+    public NutritionBasicInfo getProductById(int id, double size, String unit){
         Nutrition nutrition = nutritionRepository
                 .findById(id).orElseThrow(
                         ()-> new NotFoundException(id)
