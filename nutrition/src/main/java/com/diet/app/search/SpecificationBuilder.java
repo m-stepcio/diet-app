@@ -19,12 +19,12 @@ public class SpecificationBuilder {
                     ((root, query, cb) -> cb.conjunction());
 
             if(nonNull(kcal)){
-                spec = addPredicate() spec.and((root, query, cb) -> cb)
+                spec = addPredicate()); spec.and((root, query, cb) -> cb)
             }
             return spec;
         }
 
-        private Predicate addPredicate(Root<Nutrition> root, CriteriaBuilder cb,
+        private Specification<Nutrition> addPredicate(Specification<Nutrition>, Root<Nutrition> root, CriteriaBuilder cb,
                                        QueryOperator operator, Double value, String name){
             switch (operator){
                 case EQ -> {
